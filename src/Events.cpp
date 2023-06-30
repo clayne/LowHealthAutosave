@@ -21,13 +21,10 @@ namespace Events {
                 Utility::last = std::chrono::system_clock::now();
                 if (a_event->target->IsPlayerRef()) {
                     const auto player = RE::PlayerCharacter::GetSingleton();
-                    if (const auto health = player->AsActorValueOwner()->GetActorValue(RE::ActorValue::kHealth);
-                        health <= Settings::health) {
-                        const auto health_as_pct = Hooks::GetActorValuePercent(player->As<RE::Actor>(), RE::ActorValue::kHealth);
-                        if (health_as_pct <= Settings::health) {
-                            const auto manager = RE::BGSSaveLoadManager::GetSingleton();
-                            manager->Save(std::format("LowHealthSave_{}", std::chrono::system_clock::now()).c_str());
-                        }
+                    const auto health_as_pct = Hooks::GetActorValuePercent(player->As<RE::Actor>(), RE::ActorValue::kHealth);
+                    if (health_as_pct <= Settings::health) {
+                        const auto manager = RE::BGSSaveLoadManager::GetSingleton();
+                        manager->Save(std::format("LowHealthSave_{}", std::chrono::system_clock::now()).c_str());
                     }
                 }
             }
